@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Наука и Технологии – Технологии</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles-mobile.css">
+  <link rel="stylesheet" href="comments.css">
+  <link rel="stylesheet" href="rating.css">
+  <link rel="stylesheet" href="mobile-styles.css">
+  <style>
+    /* Удалены все предыдущие стили */
+    /* Стили для уведомлений */
+    .notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 2000;
+      display: none;
+    }
+
+    .notification-message {
+      background-color: rgba(0, 255, 255, 0.9);
+      color: black;
+      padding: 15px 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      font-weight: bold;
+      text-align: center;
+      max-width: 300px;
+    }
+
+    .notification.success {
+      display: block;
+      animation: slideIn 0.5s ease-out, fadeOut 0.5s ease-in forwards;
+      animation-delay: 0s, 3s;
+    }
+
+    .notification.error {
+      display: block;
+      animation: slideIn 0.5s ease-out, fadeOut 0.5s ease-in forwards;
+      animation-delay: 0s, 3s;
+    }
+
+    .notification.error .notification-message {
+      background-color: rgba(255, 0, 0, 0.9);
+      color: white;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeOut {
+      from {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateX(100%);
+        display: none;
+      }
+    }
+
+    #modalNewsContent {
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo-container">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="site-logo">
+            <defs>
+                <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#00ffff" stop-opacity="1"/>
+                    <stop offset="100%" stop-color="#1a1a3a" stop-opacity="1"/>
+                </linearGradient>
+                <filter id="logoShadow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+                    <feOffset dx="0" dy="0" result="offsetblur"/>
+                    <feFlood flood-color="rgba(0,255,255,0.5)"/>
+                    <feComposite in2="offsetblur" operator="in"/>
+                    <feMerge>
+                        <feMergeNode/>
+                        <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                </filter>
+            </defs>
+            <g filter="url(#logoShadow)">
+                <path d="M20,50 
+                         Q40,30 50,50 
+                         T80,50 
+                         Q60,70 50,50 
+                         T20,50" 
+                      fill="none" 
+                      stroke="url(#logoGradient)" 
+                      stroke-width="6" 
+                      stroke-linecap="round"/>
+                <circle cx="50" cy="50" r="5" fill="#00ffff"/>
+                <path d="M35,35 L65,65 M65,35 L35,65" 
+                      stroke="#ffffff" 
+                      stroke-width="3" 
+                      stroke-linecap="round" 
+                      opacity="0.7"/>
+            </g>
+        </svg>
+        <h1>Наука & Технологии</h1>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html" class="nav-link">Главная</a></li>
+        <li><a href="science.html" class="nav-link">Наука</a></li>
+        <li><a href="tech.html" class="nav-link active">Технологии</a></li>
+        <li><a href="#" onclick="openModal('loginModal')" data-auth-link="login">Вход</a></li>
+        <li><a href="#" onclick="openModal('registerModal')" data-auth-link="register">Регистрация</a></li>
+        <li><span data-user-info style="display:none;"></span></li>
+        <li><a href="#" data-auth-link="logout" style="display:none;">Выйти</a></li>
+      </ul>
+    </nav>
+  </header>
+  <div class="content">
+    <h2>Новости технологий</h2>
+    <div class="news-container">
+      <div class="news-card" onclick="openNews('tech1')">
+        <img src="https://avatars.dzeninfra.ru/get-zen_doc/271828/pub_67bbfe6f0135093dea072d6b_67bbfefe5711db49446131df/scale_1200" alt="новые гаджеты">
+        <div class="card-content">
+          <h3>Новые гаджеты 2025 года</h3>
+          <p>Новейшие смартфоны, носимая электроника и умные устройства</p>
+        </div>
+      </div>
+      <div class="news-card" onclick="openNews('tech2')">
+        <img src="https://avatars.mds.yandex.net/i?id=0e81d1224b7bf9a76fe76438471011e2_l-5100742-images-thumbs&n=13" alt="Блокчейн технологии">
+        <div class="card-content">
+          <h3>Блокчейн технологии</h3>
+          <p>Блокчейн уже перестал быть только основой криптовалют. Сегодня технологии распределенного реестра эффективно применяются в финансах, логистике, управлении цепочками поставок и обеспечении прозрачности бизнес-процессов.</p>
+        </div>
+      </div>
+      <div class="news-card" onclick="openNews('tech3')">
+        <img src="https://avatars.mds.yandex.net/i?id=6bc591e03da05a53bab210d275dc1dd893573e73-5084109-images-thumbs&n=13" alt="VR">
+        <div class="card-content">
+          <h3>Новейшие VR технологии</h3>
+          <p>Новейшие технологии виртуальной реальности (VR) включают совершенствование оборудования, развитие программного обеспечения и создание контента, а также применение VR в различных сферах.</p>
+        </div>
+      </div>
+      <div class="news-card" onclick="openNews('tech4')">
+        <img src="https://montisbar.ru/wp-content/uploads/d/0/d/d0d271ad6d72e43abd8552ad06c24b4b.jpeg" alt="Инновационные гаджеты">
+        <div class="card-content">
+          <h3>Инновационные гаджеты</h3>
+          <p>Передовые устройства, которые меняют нашу повседневную жизнь и взаимодействие с технологиями.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="brands">
+    <h2>Инженеры, которым доверяют</h2>
+    <div class="brand-logos">
+      <img src="https://www.smokingcessationandhealth.co.uk/wp-content/uploads/sites/84/2021/02/Johnson_and_Johnson_logo.png" alt="Johnson &amp; Johnson">
+      <img src="https://www.electronjs.org/assets/third-parties/datadog_light.png" alt="Datadog">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Cib-cc-stripe_%28CoreUI_Icons_v1.0.0%29.svg/1200px-Cib-cc-stripe_%28CoreUI_Icons_v1.0.0%29.svg.png" alt="Stripe">
+      <img src="https://orgcentr5.ru/img/brands/7810ccd41bf26faaa2c4e1f20db70a71.png" alt="Samsung">
+    </div>
+  </div>
+  <footer>
+    &copy; 2025 Наука &amp; Технологии. Данный сайт является демонстрационным проектом.
+  </footer>
+  
+  <!-- Модальное окно для новостей -->
+  <div id="infoModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeInfoModal()">&times;</span>
+      <h2 id="modalNewsTitle"></h2>
+      <img id="modalNewsImage" src="" alt="Новость">
+      <p id="modalNewsContent"></p>
+      <div id="modalGallery" class="gallery"></div>
+    </div>
+  </div>
+  
+  <!-- Модальное окно для входа -->
+  <div id="loginModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal('loginModal')">×</span>
+      <h2>Вход</h2>
+      <form id="loginForm">
+        <input type="email" placeholder="Email" required>
+        <input type="password" placeholder="Пароль" required>
+        <button type="submit">Войти</button>
+      </form>
+      <p>Нет аккаунта? <a href="#" onclick="openModal('registerModal')">Зарегистрируйтесь</a></p>
+    </div>
+  </div>
+  
+  <!-- Модальное окно для регистрации -->
+  <div id="registerModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal('registerModal')">×</span>
+      <h2>Регистрация</h2>
+      <form id="registerForm">
+        <input type="text" placeholder="Имя" required>
+        <input type="email" placeholder="Email" required>
+        <input type="password" placeholder="Пароль" required>
+        <input type="password" placeholder="Подтвердите пароль" required>
+        <button type="submit">Зарегистрироваться</button>
+      </form>
+      <p>Уже есть аккаунт? <a href="#" onclick="openModal('loginModal')">Войдите</a></p>
+    </div>
+  </div>
+  
+  <div>
+    <!-- Всплывающие уведомления -->
+    <div id="notification" class="notification">
+      <div id="notificationMessage" class="notification-message"></div>
+    </div>
+  </div>
+
+  <script>
+    // Класс для управления пользовательскими данными
+    class UserManager {
+      constructor() {
+        this.users = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+        this.currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+      }
+      register(name, email, password) {
+        const existingUser = this.users.find(user => user.email === email);
+        if (existingUser) {
+          return { success: false, message: 'Пользователь с таким email уже существует' };
+        }
+        const newUser = {
+          id: Date.now(),
+          name: name,
+          email: email,
+          password: this.hashPassword(password),
+          registeredAt: new Date().toISOString()
+        };
+        this.users.push(newUser);
+        localStorage.setItem('registeredUsers', JSON.stringify(this.users));
+        return { success: true };
+      }
+      login(email, password) {
+        const hashedPassword = this.hashPassword(password);
+        const user = this.users.find(
+          u => u.email === email && u.password === hashedPassword
+        );
+        if (user) {
+          this.currentUser = user;
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          return { success: true };
+        }
+        const existingUser = this.users.find(u => u.email === email);
+        if (existingUser) {
+          return { success: false, message: 'Неверный пароль' };
+        } else {
+          return { success: false, message: 'Пользователь с таким email не найден' };
+        }
+      }
+      logout() {
+        this.currentUser = null;
+        localStorage.removeItem('currentUser');
+      }
+      hashPassword(password) {
+        let hash = 0;
+        for (let i = 0; i < password.length; i++) {
+          const char = password.charCodeAt(i);
+          hash = ((hash << 5) - hash) + char;
+          hash = hash & hash;
+        }
+        return hash.toString();
+      }
+      isLoggedIn() {
+        return !!this.currentUser;
+      }
+      getCurrentUser() {
+        return this.currentUser;
+      }
+      showNotification(message, type = 'success') {
+        // Используем красивые уведомления вместо alert
+        const notification = document.getElementById('notification');
+        const notificationMessage = document.getElementById('notificationMessage');
+        
+        if (notification && notificationMessage) {
+          notificationMessage.textContent = message;
+          notification.className = `notification ${type}`;
+          
+          // Удаляем класс после анимации, чтобы можно было показать следующее уведомление
+          setTimeout(() => {
+            notification.classList.remove(type);
+          }, 3500);
+        } else {
+          // Fallback на alert если элементы уведомлений не найдены
+          alert(message);
+        }
+      }
+    }
+    const userManager = new UserManager();
+
+    // Объект с расширенной информацией для новостей раздела "Технологии"
+    const newsDetails = {
+      tech1: {
+        title: "Лучшие гаджеты 2025",
+        image: "https://avatars.dzeninfra.ru/get-zen_doc/271828/pub_67bbfe6f0135093dea072d6b_67bbfefe5711db49446131df/scale_1200",
+        content: "Кратко: новейшие смартфоны, носимая электроника и умные устройства.",
+        fullText: `В 2025 году представлены новости о новинках в разных категориях гаджетов: смартфонах, ноутбуках, умных очках и устройствах для здоровья. Ниже приведены примеры таких новостей в разных сферах. 
+
+Смартфоны
+Анонс Samsung Exynos 2500 — флагманского чипсета 2025 года, производимого по 3-нм техпроцессу GAAFET на корейской сборочной линии. 
+
+Представление линейки Samsung Galaxy S25: стандартного S25, S25+ и S25 Ultra. Новинки получат процессор Snapdragon 8 Elite, улучшенные сенсоры камер, а S25 Ultra — основной сенсор на 200 Мп. 
+
+Анонс упрощённой версии Galaxy S25 — модели с приставкой FE, вероятно, оснастят чипом Exynos 2400 и 8 ГБ оперативной памяти. 
+Ноутбуки
+Представление Lenovo ThinkBook Plus 6 Rollable — первого потребительского ноутбука с выдвижным OLED-дисплеем. В сложенном состоянии диагональ — 14 дюймов, но одним нажатием кнопки моторизованный ролик на шарнире расширяет дисплей по вертикали до 16,7 дюймов.
+Анонс ASUS ZenBook Duo 2025 — ультрабука с двумя 14-дюймовыми сенсорными дисплеями, которые можно расположить на столе вертикально или горизонтально.
+Умные очки
+Представление Xiaomi AI Glasses — умных очков с двумя камерами Sony IMX681 на 12 Мп, шестью микрофонами для записи звука и шумоподавления, парой динамиков. Фирменный ассистент XiaoAi распознаёт объекты вокруг пользователя и отвечает на вопросы голосом.
+Анонс умных очков AirGo A5 и V2 от компании Solos. Модель AirGo A5 ориентирована на аудиофункциональность, AirGo V2 — на визуальные возможности.
+Гаджеты для здоровья
+Представление Vivo Watch 5 — смарт-часов с акцентом на отслеживании состояния здоровья. Часы предлагаются в двух вариантах: модель с исключительно Bluetooth-подключением и версия с поддержкой функции eSIM. Функционал для контроля показателей здоровья и физической активности: свыше 100 встроенных спортивных режимов, ИИ-тренер, комплексное отслеживание здоровья (пульс, качество сна и др.).`,
+        additionalImages: [
+          "https://www.stuff.tv/wp-content/uploads/sites/2/2025/01/Best-AI-phones-2025-lead.jpg?resize=130",
+          "https://avatars.mds.yandex.net/i?id=839b9a0ae753c3c34fa2d92066882001_l-4614157-images-thumbs&n=13",
+          "https://avatars.mds.yandex.net/i?id=7153f0891b11956382b037335e369a5a_l-4835315-images-thumbs&n=13",
+          "https://avatars.mds.yandex.net/i?id=af41da8fe7651791fc55441097e901eb_l-10715741-images-thumbs&n=13"
+        ]
+      },
+      tech2: {
+        title: "Блокчейн технологии",
+        image: "https://avatars.mds.yandex.net/i?id=0e81d1224b7bf9a76fe76438471011e2_l-5100742-images-thumbs&n=13",
+        content: "Кратко: технологии распределенного реестра находят применение в разных отраслях.",
+        fullText: `В июне 2025 года в новостях о технологии блокчейн (распределённой базе данных без централизованного руководства, на основе которой создаются криптовалюты) есть материалы о событиях в мире и в России. Ниже приведены некоторые из них. 
+В мире
+Coinbase: 60% компаний из списка Fortune 500 внедряют блокчейн-решения. В квартальном отчёте криптобиржи Coinbase говорится, что около 60% руководителей компаний из списка Fortune 500 сообщили о работе над блокчейн-инициативами.
+В Университете штата Колорадо создали генератор случайных чисел для защиты данных блокчейна. Учёные разработали новую устойчивую ко взлому технологию генерации случайных чисел CURBy для защиты криптовалютных операций и данных блокчейнов.
+Комиссия по ценным бумагам и биржам США (SEC) работает над мерами, предусматривающими освобождение платформ децентрализованных финансов (De-Fi) от нормативных барьеров. Председатель SEC Пол Аткинс заявил, что ведомство работает над этими мерами.
+ 
+В России
+Банк России предложил новые даты введения цифрового рубля — третьей формы национальной валюты на основе технологии блокчейн. Переводы и платежи цифровым рублём будут внедрять поэтапно: сначала в систему введут крупнейшие банки и торговые компании, остальные присоединятся через год-два. Первый этап планируется начать с 1 сентября 2026 года.
+МФТИ создал блокчейн-платформу Unichain. Она поддерживает три протокола (Ethereum (EVM), Hyperledger Fabric и Cosmos), в которых оплата транзакций производится в классических рублях, что облегчает работу обычных пользователей.`,
+        additionalImages: [
+          "https://avatars.mds.yandex.net/i?id=8a0d38ac4a22c877c26412796d584c96_l-10491665-images-thumbs&n=13y",
+          "https://avatars.mds.yandex.net/i?id=f4f2d99ab3799f13b99cb60a82a62d77_l-5639962-images-thumbs&n=13h"
+        ]
+      },
+      tech3: {
+        title: "Новейшие VR технологии",
+        image: "https://avatars.mds.yandex.net/i?id=6bc591e03da05a53bab210d275dc1dd893573e73-5084109-images-thumbs&n=13",
+        content: "Кратко: виртуальная реальность на новом уровне.",
+        fullText: `Устройства
+Анонс автономного шлема Valve Deckard. Устройство позиционируется как преемник Valve Index, ориентировано на пользовательский опыт виртуальной реальности без подключения к персональному компьютеру. Ожидается:
+два LCD-дисплея с разрешением 2160×2160 пикселей на каждый глаз и частотой обновления 120 Гц;
+поле зрения — 140 градусов;
+работа на улучшенной модификации операционной системы SteamOS, что позволит запускать игры из библиотеки Steam без подключения к ПК.
+Анонс гарнитуры Pico 5 от компании Pico. Устройство ориентировано на массовый рынок, развлечения и ИИ-интеграцию. Предлагает:
+дисплеи с разрешением 2160×2160 на глаз;
+частоту обновления 120 Гц;
+встроенные AI-инструменты: генерация 3D-аватаров, интеллектуальные подсказки, обработка речи.
+ 
+Программное обеспечение
+Анонс движка VR Concept для разработки VR-приложений. Он предлагает интуитивно понятный интерфейс, интеграцию с множеством платформ и поддержку современных технологий трекинга движений. 
+Игры
+Анонс VR-версии Civilization VII для шлемов Quest 3 и 3S весной 2025 года. Игроки смогут свободно переключаться между виртуальной и смешанной реальностью.
+Анонс VR-версии Surviving Mars: Pioneer — новой VR-версии классической стратегии. Игра будет доступна в раннем доступе для Meta Quest и PC VR в 2025 году.
+ 
+Применение
+Интеграция VR в образование и обучение. Внедряются системы, которые позволяют создавать иммерсивные учебные среды для школ и университетов. Например, студенты могут изучать древние цивилизации, прогуливаясь по реконструкции древнего города, или погружаться в детали устройства человеческого организма с помощью интерактивных 3D-моделей.
+VR в медицине. Технологии VR позволяют создавать программы для реабилитации пациентов после инсультов или травм, а также применять VR в лечении психологических расстройств, включая фобии и стрессовые состояния.`,
+        additionalImages: [
+          "https://vsar.ru/data/photo/080524_052304950102.jpg",
+          "https://roadtovrlive-5ea0.kxcdn.com/wp-content/uploads/2014/01/eve-valkyrie-ces-2014-intel-booth-small.jpg"
+        ]
+      },
+      tech4: {
+        title: "Инновационные гаджеты",
+        image: "https://montisbar.ru/wp-content/uploads/d/0/d/d0d271ad6d72e43abd8552ad06c24b4b.jpeg",
+        content: "Кратко: Передовые устройства для дома, здоровья, спорта и образования делают жизнь удобнее, безопаснее и эффективнее.",
+        fullText: `Для дома
+Смарт-розетка — управляет питанием подключённых к ней устройств: электрочайников, обогревателей, увлажнителей, вентиляторов. Управлять розеткой можно удалённо или через колонку с голосовым помощником.
+Робот-пылесос — самостоятельно поддерживает чистоту, убирает пыль, грязь и даже моет полы. Имеет систему навигации, ориентируется в пространстве дома.
+Умные шторы — открываются и закрываются по расписанию или по голосовой команде владельца.
+ 
+Для здоровья
+Мультифункциональные «умные» часы — измеряют температуру, артериальное давление, определяют уровень холестерина, мочевой кислоты и другие показатели. Есть функция удалённого отслеживания показателей здоровья: информация с устройства синхронизируется с облачным сервисом.
+Устройство для комплексного мониторинга физиологических показателей — крепится к груди пациента и непрерывно измеряет около 20 показателей: температуру, сердечный ритм, частоту дыхания и другие. Есть функция персонализированных предупреждений: если показатели выходят за пределы нормы, устройство отправляет через Bluetooth уведомление на смартфон.
+ 
+Для спорта
+Smart Fitness Mirror — гаджет-зеркало со встроенным экраном и виртуальным тренером, который помогает делать упражнения из выбранной через смартфон программы (силовые тренировки, кардио, пилатес, йога или бокс). Пользователь видит себя в отражении лицом к лицу с тренером — это позволяет следить за техникой выполнения упражнений.
+Цифровая гиря от Tonal — компактный домашний тренажёр, который заменяет гантели и определяет подходящий вес, автоматически регулируя интенсивность тренировки.
+ 
+Для образования
+Планшеты с поддержкой стилуса — позволяют делать заметки, рисовать схемы и создавать презентации прямо на экране.
+Умные ручки — позволяют записывать лекции и синхронизировать их с цифровыми заметками.
+Наушники с шумоподавлением — блокируют посторонние звуки, позволяя сосредоточиться на учебном материале или аудиолекциях без лишних отвлечений.`,
+        additionalImages: [
+          "https://resizer.mail.ru/p/8535c602-006c-590d-81df-8389fe09fc3a/AQAKB8FR4IDBqmz3tBKmkxWal2Igg0sZN0SCCz19vLET7EkiR1-r8b6x9B2ApT8KhyZDhaELaxC-hgRe1Ta8qA5xjIc.jpg",
+          "https://i.pinimg.com/736x/7e/da/ce/7edaced3f0d9f53432ae9fcf95e5e1ff.jpg"
+        ]
+      }
+    };
+    
+    // Блокировка автоматического открытия модального окна
+    document.addEventListener('DOMContentLoaded', function() {
+      const infoModal = document.getElementById('infoModal');
+      if (infoModal) {
+        infoModal.style.display = 'none';
+      }
+    });
+
+    function openNews(newsId) {
+      const news = newsDetails[newsId];
+      if (news) {
+        document.getElementById("modalNewsTitle").innerText = news.title;
+        document.getElementById("modalNewsImage").src = news.image;
+        document.getElementById("modalNewsContent").innerText = news.content + "\n\n" + news.fullText;
+        const galleryElem = document.getElementById("modalGallery");
+        galleryElem.innerHTML = "";
+        if (news.additionalImages && news.additionalImages.length > 0) {
+          news.additionalImages.forEach(imgUrl => {
+            const imgElem = document.createElement("img");
+            imgElem.src = imgUrl;
+            imgElem.alt = news.title;
+            galleryElem.appendChild(imgElem);
+          });
+        }
+        document.getElementById("infoModal").style.display = "flex";
+        
+        // Добавляем секцию рейтинга
+        setTimeout(() => {
+          addRatingSection(newsId);
+          addCommentsSection(newsId);
+        }, 100);
+      }
+    }
+    
+    function closeInfoModal() {
+      document.getElementById("infoModal").style.display = "none";
+    }
+    
+    function openModal(modalId) {
+      document.getElementById(modalId).style.display = 'block';
+    }
+    
+    function closeModal(modalId) {
+      document.getElementById(modalId).style.display = 'none';
+    }
+    
+    // Закрытие модального окна при клике вне его
+    window.onclick = function(event) {
+      if (event.target.classList.contains('modal')) {
+        event.target.style.display = 'none';
+      }
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = this.querySelector('input[type="email"]').value;
+      const password = this.querySelector('input[type="password"]').value;
+      const result = userManager.login(email, password);
+      
+      if (result.success) {
+        showNotification('Вход выполнен успешно', 'success');
+        closeModal('loginModal');
+        updateAuthUI();
+      } else {
+        showNotification(result.message, 'error');
+      }
+    });
+
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = this.querySelector('input[placeholder="Имя"]').value;
+      const email = this.querySelector('input[type="email"]').value;
+      const password = this.querySelector('input[type="password"]').value;
+      const result = userManager.register(name, email, password);
+      
+      if (result.success) {
+        showNotification('Регистрация прошла успешно', 'success');
+        closeModal('registerModal');
+        // Автоматический вход после регистрации
+        userManager.login(email, password);
+        updateAuthUI();
+      } else {
+        showNotification(result.message, 'error');
+      }
+    });
+
+    // === Улучшено для корректного отображения авторизации ===
+    function updateAuthUI() {
+      const navList = document.querySelector('nav ul');
+      const loginLink = navList.querySelector('a[data-auth-link="login"]').parentElement;
+      const registerLink = navList.querySelector('a[data-auth-link="register"]').parentElement;
+      // Удаляем старые элементы приветствия и выхода, если есть
+      const oldUserName = navList.querySelector('#userName');
+      const oldLogout = navList.querySelector('#logoutLink');
+      if (oldUserName) oldUserName.parentElement.remove();
+      if (oldLogout) oldLogout.parentElement.remove();
+      if (userManager.isLoggedIn()) {
+        const user = userManager.getCurrentUser();
+        loginLink.style.display = 'none';
+        registerLink.style.display = 'none';
+        // Добавляем приветствие
+        const userNameElement = document.createElement('li');
+        userNameElement.innerHTML = `<span id="userName">Привет, ${user.name}</span>`;
+        // Добавляем кнопку выхода
+        const logoutLinkElement = document.createElement('li');
+        logoutLinkElement.innerHTML = `<a href="#" id="logoutLink">Выйти</a>`;
+        navList.appendChild(userNameElement);
+        navList.appendChild(logoutLinkElement);
+        // Обработчик выхода
+        document.getElementById('logoutLink').addEventListener('click', function(e) {
+          e.preventDefault();
+          userManager.logout();
+          updateAuthUI();
+          showNotification('Вы вышли из аккаунта');
+        });
+      } else {
+        loginLink.style.display = 'list-item';
+        registerLink.style.display = 'list-item';
+        // Удаляем приветствие и выход, если вдруг остались
+        const oldUserName = navList.querySelector('#userName');
+        const oldLogout = navList.querySelector('#logoutLink');
+        if (oldUserName) oldUserName.parentElement.remove();
+        if (oldLogout) oldLogout.parentElement.remove();
+      }
+    }
+    document.addEventListener('DOMContentLoaded', updateAuthUI);
+    // === Конец улучшения ===
+
+    // Функция для показа уведомлений с возможностью указать тип
+    function showNotification(message, type = 'success') {
+      const notification = document.getElementById('notification');
+      const notificationMessage = document.getElementById('notificationMessage');
+      
+      notificationMessage.textContent = message;
+      notification.className = `notification ${type}`;
+      
+      // Удаляем класс после анимации, чтобы можно было показать следующее уведомление
+      setTimeout(() => {
+        notification.classList.remove(type);
+      }, 3500);
+    }
+  </script>
+  <script src="auth.js"></script>
+  <script src="background-animation.js"></script>
+  <script src="comments.js"></script>
+  <script src="rating.js"></script>
+  <!-- Универсальный скрипт для мобильных устройств -->
+  <script src="mobile-universal-scroll.js"></script>
+  <script src="mobile-header-scroll.js"></script>
+  <script src="mobile-scroll.js"></script>
+  <!-- Мобильная навигация -->
+  <script src="mobile-header-scroll.js"></script>
+  <!-- Скрипт плавных переходов -->
+  <script src="page-transitions.js"></script>
+  <!-- Скрипт анимаций -->
+  <script src="animations.js"></script>
+  
+  <!-- Добавляем классы для анимаций -->
+  <div class="content-section animate-on-scroll">
+    <!-- Существующий контент -->
+  </div>
+  
+  <div class="parallax-element">
+    <!-- Элементы с параллакс-эффектом -->
+  </div>
+
+  <!-- Скрипты в конце body -->
+  <script src="auth.js"></script>
+  <script src="modal-control.js"></script>
+</body>
+</html>

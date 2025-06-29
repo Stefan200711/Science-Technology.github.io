@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Вход и Регистрация</title>
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 300px;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        .modal-content {
+            text-align: center;
+        }
+        .modal input {
+            width: 100%;
+            margin: 10px 0;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        .modal button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px;
+            border-radius: 5px;
+            color: white;
+            z-index: 1100;
+            display: none;
+        }
+        .notification.success {
+            background-color: green;
+        }
+        .notification.error {
+            background-color: red;
+        }
+        .notification.visible {
+            display: block;
+        }
+    </style>
+    <link rel="stylesheet" href="styles-mobile.css">
+</head>
+<body>
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('loginModal')">×</span>
+            <h2>Вход</h2>
+            <form id="loginForm">
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Пароль" required>
+                <button type="submit">Войти</button>
+            </form>
+            <p>Нет аккаунта? <a href="#" onclick="openModal('registerModal')">Зарегистрируйтесь</a></p>
+        </div>
+    </div>
+
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('registerModal')">×</span>
+            <h2>Регистрация</h2>
+            <form id="registerForm">
+                <input type="text" placeholder="Имя" required>
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Пароль" required>
+                <input type="password" placeholder="Подтвердите пароль" required>
+                <button type="submit">Зарегистрироваться</button>
+            </form>
+            <p>Уже есть аккаунт? <a href="#" onclick="openModal('loginModal')">Войдите</a></p>
+        </div>
+    </div>
+
+    <!-- Добавляем элемент уведомления -->
+    <div id="notification" class="notification">
+        <span id="notificationMessage"></span>
+    </div>
+
+    <script>
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Закрытие модального окна при клике вне его
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Здесь будет логика входа
+            alert('Вход выполняется');
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Здесь будет логика регистрации
+            alert('Регистрация выполняется');
+        });
+    </script>
+
+    <!-- Универсальный скрипт для мобильных устройств -->
+    <script src="mobile-universal-scroll.js"></script>
+
+    <div>
+        <script src="mobile-header-scroll.js"></script>
+        <script src="mobile-scroll.js"></script>
+    </div>
+
+    <!-- Мобильная навигация -->
+    <script src="mobile-header-scroll.js"></script>
+
+    <!-- Скрипт плавных переходов -->
+    <script src="page-transitions.js"></script>
+
+    <!-- Скрипт анимаций -->
+    <script src="animations.js"></script>
+    
+    <!-- Добавляем классы для анимаций -->
+    <div class="content-section animate-on-scroll">
+      <!-- Форма авторизации -->
+    </div>
+    
+    <div class="parallax-element">
+      <!-- Элементы с параллакс-эффектом -->
+    </div>
+
+    <script src="auth.js"></script>
+</body>
+</html> 

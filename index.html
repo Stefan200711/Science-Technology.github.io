@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0d1117">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Наука и Технологии – Главная</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles-mobile.css">
+  <link rel="stylesheet" href="comments.css">
+  <link rel="stylesheet" href="rating.css">
+  <style>
+    /* Удалены все предыдущие стили */
+    /* Стили для уведомлений */
+    .notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 2000;
+      display: none;
+    }
+
+    .notification-message {
+      background-color: rgba(0, 255, 255, 0.9);
+      color: black;
+      padding: 15px 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      font-weight: bold;
+      text-align: center;
+      max-width: 300px;
+    }
+
+    .notification.success {
+      display: block;
+      animation: slideIn 0.5s ease-out, fadeOut 0.5s ease-in forwards;
+      animation-delay: 0s, 3s;
+    }
+
+    .notification.error {
+      display: block;
+      animation: slideIn 0.5s ease-out, fadeOut 0.5s ease-in forwards;
+      animation-delay: 0s, 3s;
+    }
+
+    .notification.error .notification-message {
+      background-color: rgba(255, 0, 0, 0.9);
+      color: white;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeOut {
+      from {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateX(100%);
+        display: none;
+      }
+    }
+
+    #modalNewsContent {
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo-container">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="site-logo">
+            <defs>
+                <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#00ffff" stop-opacity="1"/>
+                    <stop offset="100%" stop-color="#1a1a3a" stop-opacity="1"/>
+                </linearGradient>
+                <filter id="logoShadow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+                    <feOffset dx="0" dy="0" result="offsetblur"/>
+                    <feFlood flood-color="rgba(0,255,255,0.5)"/>
+                    <feComposite in2="offsetblur" operator="in"/>
+                    <feMerge>
+                        <feMergeNode/>
+                        <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                </filter>
+            </defs>
+            <g filter="url(#logoShadow)">
+                <path d="M20,50 
+                         Q40,30 50,50 
+                         T80,50 
+                         Q60,70 50,50 
+                         T20,50" 
+                      fill="none" 
+                      stroke="url(#logoGradient)" 
+                      stroke-width="6" 
+                      stroke-linecap="round"/>
+                <circle cx="50" cy="50" r="5" fill="#00ffff"/>
+                <path d="M35,35 L65,65 M65,35 L35,65" 
+                      stroke="#ffffff" 
+                      stroke-width="3" 
+                      stroke-linecap="round" 
+                      opacity="0.7"/>
+            </g>
+        </svg>
+        <h1>Наука & Технологии</h1>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html" class="nav-link active">Главная</a></li>
+        <li><a href="science.html" class="nav-link">Наука</a></li>
+        <li><a href="tech.html" class="nav-link">Технологии</a></li>
+        <li><a href="#" onclick="openModal('loginModal')" data-auth-link="login">Вход</a></li>
+        <li><a href="#" onclick="openModal('registerModal')" data-auth-link="register">Регистрация</a></li>
+        <li><span data-user-info style="display:none;"></span></li>
+        <li><a href="#" data-auth-link="logout" style="display:none;">Выйти</a></li>
+      </ul>
+    </nav>
+  </header>
+  <div class="content">
+    <h2>Свежие новости</h2>
+    <div class="news-container">
+      <!-- Новостные карточки -->
+      <div class="news-card" onclick="openNews('news1')">
+        <img src="https://avatars.dzeninfra.ru/get-zen_doc/271828/pub_6790fca2ee6f385f32d18238_6790fccce392f16155ac8a11/scale_1200" alt="Квантовые вычисления">
+        <div class="card-content">
+          <h3>Прорыв в квантовых вычислениях</h3>
+          <p>Создание процессоров с большим числом кубитов открывает новые возможности для научных исследований.</p>
+        </div>
+      </div>
+      <div class="news-card" onclick="openNews('news2')">
+        <img src="https://d2qu5xmcgmzxnb.cloudfront.net/ewogICAgICAgICAgICAgICAgICAgICAgICAiYnVja2V0IjogImZpbGVzLmxici5jbG91ZCIsCiAgICAgICAgICAgICAgICAgICAgICAgICJrZXkiOiAicHVibGljLzIwMjEtMDUvSGVhbHRoY2FyZSBBSS5qcGciLAogICAgICAgICAgICAgICAgICAgICAgICAiZWRpdHMiOiB7CiAgICAgICAgICAgICAgICAgICAgICAgICAgInJlc2l6ZSI6IHsKICAgICAgICAgICAgICAgICAgICAgICAgICAgICJ3aWR0aCI6IDk0NSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICJoZWlnaHQiOiA1MjYsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAiZml0IjogImNvdmVyIgogICAgICAgICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgICAgIH0=" alt="Искусственный интеллект в медицине">
+        <div class="card-content">
+          <h3>ИИ трансформирует медицину</h3>
+          <p>Инновационные алгоритмы помогают врачам в диагностике и разработке персонализированных методов лечения.</p>
+        </div>
+      </div>
+      <div class="news-card" onclick="openNews('news3')">
+        <img src="https://avatars.mds.yandex.net/i?id=9c2c47d872d4e379d947d86022b770dcd7096849-6674535-images-thumbs&n=13" alt="Исследования Марса">
+        <div class="card-content">
+          <h3>Новые горизонты марсианских исследований</h3>
+          <p>Последние миссии раскрывают тайны Красной планеты и возможности колонизации.</p>
+        </div>
+      </div>
+      <div class="news-card" onclick="openNews('news4')">
+        <img src="https://media.springernature.com/full/springer-static/image/art%3A10.1038%2F542028a/MediaObjects/41586_2017_Article_BF542028a_Figa_HTML.jpg" alt="Космические исследования">
+        <div class="card-content">
+          <h3>Прорывы в космической науке</h3>
+          <p>Новейшие технологии расширяют наши возможности изучения вселенной.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="brands">
+    <h2>Инженеры, которым доверяют</h2>
+    <div class="brand-logos">
+      <img src="https://www.smokingcessationandhealth.co.uk/wp-content/uploads/sites/84/2021/02/Johnson_and_Johnson_logo.png" alt="Johnson &amp; Johnson">
+      <img src="https://www.electronjs.org/assets/third-parties/datadog_light.png" alt="Datadog">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Cib-cc-stripe_%28CoreUI_Icons_v1.0.0%29.svg/1200px-Cib-cc-stripe_%28CoreUI_Icons_v1.0.0%29.svg.png" alt="Stripe">
+      <img src="https://orgcentr5.ru/img/brands/7810ccd41bf26faaa2c4e1f20db70a71.png" alt="Samsung">
+    </div>
+  </div>
+  <footer>
+    &copy; 2025 Наука &amp; Технологии. Данный сайт является демонстрационным проектом.
+  </footer>
+  
+  <!-- Модальное окно для новостей -->
+  <div id="infoModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeInfoModal()">&times;</span>
+      <h2 id="modalNewsTitle"></h2>
+      <img id="modalNewsImage" src="" alt="Новость">
+      <p id="modalNewsContent"></p>
+      <div id="modalGallery" class="gallery"></div>
+    </div>
+  </div>
+  
+  <!-- Модальное окно для входа -->
+  <div id="loginModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal('loginModal')">×</span>
+      <h2>Вход</h2>
+      <form id="loginForm">
+        <input type="email" placeholder="Email" required>
+        <input type="password" placeholder="Пароль" required>
+        <button type="submit">Войти</button>
+      </form>
+      <p>Нет аккаунта? <a href="#" onclick="openModal('registerModal')">Зарегистрируйтесь</a></p>
+    </div>
+  </div>
+  
+  <!-- Модальное окно для регистрации -->
+  <div id="registerModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal('registerModal')">×</span>
+      <h2>Регистрация</h2>
+      <form id="registerForm">
+        <input type="text" placeholder="Имя" required>
+        <input type="email" placeholder="Email" required>
+        <input type="password" placeholder="Пароль" required>
+        <input type="password" placeholder="Подтвердите пароль" required>
+        <button type="submit">Зарегистрироваться</button>
+      </form>
+      <p>Уже есть аккаунт? <a href="#" onclick="openModal('loginModal')">Войдите</a></p>
+    </div>
+  </div>
+  
+  <!-- Всплывающие уведомления -->
+  <div id="notification" class="notification">
+    <div id="notificationMessage" class="notification-message"></div>
+  </div>
+
+  <script>
+    // Класс для управления пользовательскими данными
+    class UserManager {
+      constructor() {
+        this.users = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+        this.currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+      }
+
+      // Регистрация нового пользователя
+      register(name, email, password) {
+        // Проверка, существует ли уже пользователь с таким email
+        const existingUser = this.users.find(user => user.email === email);
+        if (existingUser) {
+          return false;
+        }
+
+        const newUser = {
+          id: Date.now(), // Уникальный идентификатор
+          name: name,
+          email: email,
+          password: this.hashPassword(password), // Простейшее хеширование
+          registeredAt: new Date().toISOString()
+        };
+
+        this.users.push(newUser);
+        localStorage.setItem('registeredUsers', JSON.stringify(this.users));
+        return true;
+      }
+
+      // Вход пользователя
+      login(email, password) {
+        const hashedPassword = this.hashPassword(password);
+        const user = this.users.find(
+          u => u.email === email && u.password === hashedPassword
+        );
+
+        if (user) {
+          this.currentUser = user;
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          return { success: true };
+        }
+
+        // Проверяем причину неудачного входа
+        const existingUser = this.users.find(u => u.email === email);
+        if (existingUser) {
+          return { success: false, message: 'Неверный пароль' };
+        } else {
+          return { success: false, message: 'Пользователь с таким email не найден' };
+        }
+      }
+
+      // Выход пользователя
+      logout() {
+        this.currentUser = null;
+        localStorage.removeItem('currentUser');
+      }
+
+      // Простейшее хеширование (не для реального использования!)
+      hashPassword(password) {
+        let hash = 0;
+        for (let i = 0; i < password.length; i++) {
+          const char = password.charCodeAt(i);
+          hash = ((hash << 5) - hash) + char;
+          hash = hash & hash; // Преобразование в 32-битное целое
+        }
+        return hash.toString();
+      }
+
+      // Проверка, авторизован ли пользователь
+      isLoggedIn() {
+        return !!this.currentUser;
+      }
+
+      // Получение текущего пользователя
+      getCurrentUser() {
+        return this.currentUser;
+      }
+    }
+
+    // Создаем экземпляр UserManager
+    const userManager = new UserManager();
+
+    // Обновляем интерфейс в зависимости от статуса авторизации
+    function updateAuthUI() {
+      const loginRegisterLinks = document.querySelectorAll('nav li:nth-child(4), nav li:nth-child(5)');
+      const logoutLink = document.getElementById('logoutLink');
+
+      if (userManager.isLoggedIn()) {
+        const user = userManager.getCurrentUser();
+        
+        // Скрываем ссылки входа и регистрации
+        loginRegisterLinks.forEach(link => link.style.display = 'none');
+        
+        // Показываем имя пользователя
+        const userNameSpan = document.getElementById('userName');
+        if (!userNameSpan) {
+          const userNameElement = document.createElement('li');
+          userNameElement.innerHTML = `<span id="userName">Привет, ${user.name}</span>`;
+          const logoutLinkElement = document.createElement('li');
+          logoutLinkElement.innerHTML = `<a href="#" id="logoutLink">Выйти</a>`;
+          
+          const nav = document.querySelector('nav ul');
+          nav.appendChild(userNameElement);
+          nav.appendChild(logoutLinkElement);
+
+          // Добавляем обработчик выхода
+          document.getElementById('logoutLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            userManager.logout();
+            updateAuthUI();
+            showNotification('Вы вышли из аккаунта');
+          });
+        }
+      } else {
+        // Показываем ссылки входа и регистрации
+        loginRegisterLinks.forEach(link => link.style.display = 'block');
+        
+        // Удаляем элементы имени пользователя и выхода, если они есть
+        const userNameSpan = document.getElementById('userName');
+        const logoutLink = document.getElementById('logoutLink');
+        if (userNameSpan) userNameSpan.remove();
+        if (logoutLink) logoutLink.remove();
+      }
+    }
+
+    // Вызываем при загрузке страницы
+    document.addEventListener('DOMContentLoaded', updateAuthUI);
+
+    // Объект с расширенной информацией для новостей раздела "Главная"
+    const newsDetails = {
+      news1: {
+        title: "Грядущие достижения в квантовых вычислениях",
+        image: "https://avatars.dzeninfra.ru/get-zen_doc/271828/pub_6790fca2ee6f385f32d18238_6790fccce392f16155ac8a11/scale_1200",
+        content: "Кратко: создание процессоров с большим числом кубитов.",
+        fullText: `
+      В этой новости описываются исследования, направленные на создание квантовых процессоров, способных решать задачи, недоступные классическим вычислительным системам. Новейшие методы коррекции ошибок уже демонстрируют высокий потенциал в экспериментальных установках.
+      
+      Современные достижения и планы на будущее
+      В 2025 году IBM планирует создать самый мощный в мире квантовый компьютер, объединив вычислительную мощь нескольких параллельно соединённых квантовых процессоров. Ожидается, что к 2025 году количество обрабатываемых кубитов достигнет рекордного уровня, а к 2026 году — более 4 000 кубитов.
+      Компания планирует разработать мультичиповый процессор Kookaburra, который сможет самостоятельно обрабатывать 1 386 кубитов. В 2026 году планируется соединить три QPU Kookaburra через квантовый канал связи, что позволит обрабатывать в общей сложности 4 158 кубитов.
+      
+        Китайские учёные в марте 2025 года представили квантовый процессор Zuchongzhi-3 на 105 кубитах с высокой скоростью выполнения сложных вычислений. Для сравнения — предыдущий рекордсмен Google Sycamore имел всего 67 кубитов.
+        Российские учёные разработали технологию создания логических элементов вычислителей на новых физических принципах с точностью до 0,2 ангстрема (0,02 нм). Эта методика открывает дорогу к миниатюризации элементов и созданию суперкомпьютеров нового поколения. В России смогут серийно изготавливать квантовые процессоры с тысячами кубитов — сверхпроводниковых искусственных атомов — с точно заданными параметрами.
+      
+    `,
+        additionalImages: [
+          "https://avatars.dzeninfra.ru/get-zen_doc/271828/pub_6582009151648e3553754d0a_6582039f2a701c4cc2e6236d/scale_1200",
+          "https://habrastorage.org/getpro/habr/upload_files/ef8/e0a/c1c/ef8e0ac1cf3ac14b3fdad24130d3865f.PNG"
+        ]
+      },
+      news2: {
+        title: "ИИ в медицине",
+        image: "https://d2qu5xmcgmzxnb.cloudfront.net/ewogICAgICAgICAgICAgICAgICAgICAgICAiYnVja2V0IjogImZpbGVzLmxici5jbG91ZCIsCiAgICAgICAgICAgICAgICAgICAgICAgICJrZXkiOiAicHVibGljLzIwMjEtMDUvSGVhbHRoY2FyZSBBSS5qcGciLAogICAgICAgICAgICAgICAgICAgICAgICAiZWRpdHMiOiB7CiAgICAgICAgICAgICAgICAgICAgICAgICAgInJlc2l6ZSI6IHsKICAgICAgICAgICAgICAgICAgICAgICAgICAgICJ3aWR0aCI6IDk0NSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICJoZWlnaHQiOiA1MjYsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAiZml0IjogImNvdmVyIgogICAgICAgICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgICAgIH0=",
+        content: "Кратко: алгоритмы ИИ помогают в диагностике заболеваний.",
+        fullText: `Мировой и российский рынки искусственного интеллекта (ИИ) в здравоохранении демонстрируют стремительный рост. 
+Согласно совместному исследованию консалтинговой компании «Яков и Партнёры» и ГК «МЕДСИ», к 2030 году объём российского рынка ИИ в медицине может достичь 78 млрд рублей — это в шесть раз больше по сравнению с 2023 годом. При этом глобальный рынок вырастет до 130–160 млрд долларов, и доля медицинского сектора в нём приблизится к 8%. 
+
+Ключевая причина этого роста — прорывной потенциал ИИ, который позволяет не только ускорить диагностику, но и выстраивать более эффективное взаимодействие между пациентом и врачом. 
+Некоторые примеры использования ИИ в медицине:
+Анализ медицинских изображений. Системы автоматически распознают патологии на рентгеновских снимках или МРТ. 
+Персонализированный подход к лечению. Системы анализируют ДНК пациентов, чтобы подобрать наиболее эффективные лекарства и дозировки. 
+Прогнозирование эпидемиологической обстановки. Анализируя обширные базы данных, нейросети могут предсказывать вспышки заболеваний, помогая системам здравоохранения заранее подготовиться к возможным вызовам. 
+Автоматизация рутинных задач. Системы на базе ИИ помогают анализировать изображения, заполнять медкарты, предупреждать о возможных ошибках и управлять расписанием. `,
+        additionalImages: [
+          "https://avatars.dzeninfra.ru/get-zen_doc/271828/pub_680f469fcd03491c5c396bdb_680f46a8cd03491c5c397504/scale_1200",
+          "https://www.garant.ru/files/1/4/1200841/podgotovleny-usloviya-oplaty-foms-chastnoy-vysokotehnologichnoy-medicinskoy-pomoschi-okazannoy-sverh-bazovoy-programmy_460.jpg"
+        ]
+      },
+      news3: {
+        title: "Открытия на Марсе",
+        image: "https://avatars.mds.yandex.net/i?id=9c2c47d872d4e379d947d86022b770dcd7096849-6674535-images-thumbs&n=13",
+        content: "Кратко: обнаружены следы древних водных потоков на Марсе.",
+        fullText: `Марсоход Curiosity обнаружил на Марсе коробочные структуры — возможные следы древних грунтовых вод. 
+Эти структуры похожи на осыпавшийся бордюр и не могли быть обнаружены с орбиты. Геологи называют их коробочными и связывают с грунтовыми водами в прошлом. 
+Минералы в основе коробочных структур образуются в процессе длительного просачивания воды с поверхности вглубь породы. Спектральный анализ образцов подтверждает возможное присутствие воды в древности в изучаемом регионе. В образцах обнаружен сульфат магния, который обычно возникает в процессе испарения воды. 
+Кроме того, на снимках марсохода Curiosity в кратере Гейл, расположенном недалеко от экватора Красной планеты, найдена рябь, созданная плеском воды. Волнообразные структуры подтверждают, что когда-то на Марсе были тёплые водоёмы. 
+Находка показывает, что водное изобилие Красной планеты сохранялось дольше, чем принято считать: до сих пор учёные полагали, что во времена появления кратера Гейла, то есть 3,7 миллиарда лет назад, Марс уже начал стремительно терять свою воду.`,
+        additionalImages: [
+          "https://avatars.dzeninfra.ru/get-zen_doc/271828/pub_67c5da28a125be21a9a9eab6_67c5da2b66175e2b99ac1b04/scale_1200",
+          "https://habrastorage.org/getpro/habr/post_images/bf2/33b/7b1/bf233b7b14951e6f688949ec1878d863.jpg"
+        ]
+      },
+      news4: {
+        title: "Прорывы в космических исследованиях",
+        image: "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2F542028a/MediaObjects/41586_2017_Article_BF542028a_Figa_HTML.jpg",
+        content: "Кратко: новые данные об изучении галактик и черных дырах.",
+        fullText: `Некоторые новости и исследования, связанные с изучением галактик и чёрных дыр:
+Исследование с помощью телескопа Webb. Астрономы представили исследование, которое даёт представление о формировании и эволюции галактик в критический период истории Вселенной. Новые данные проливают свет на процессы звездообразования и роста чёрных дыр в эпоху «Космического полдня» — период от 10 до 12 миллиардов лет назад. 
+Обнаружение галактики с тремя чёрными дырами. Астрономы нашли галактику в форме знака бесконечности, которая содержит две сверхмассивные чёрные дыры и третью, образовавшуюся в результате коллапса плотного сгустка вещества. 
+Исследование чёрной дыры галактики NGC 1068. Международная команда астрономов под руководством Джека Галлимора из Университета Бакнелла выяснила, что диаметр внешнего аккреционного диска чёрной дыры галактики NGC 1068 составляет несколько световых лет. Также учёные создали подробную карту радиоизлучений и обнаружили смещение между радиоизлучением центральной области галактики и местоположением мазеров. 
+Изучение активности сверхмассивных чёрных дыр. Исследование протоскопления Паутина (PKS 1138-262) показало, что активность сверхмассивных чёрных дыр могла остановить формирование новых звёзд и замедлить рост галактик.`,
+        additionalImages: [
+          "https://avatars.mds.yandex.net/i?id=960d19c27316274aedebcf33d29ae0fd_l-5311044-images-thumbs&n=13",
+          "https://avatars.mds.yandex.net/i?id=83eb9a12f94f2a29e6b890fd9fca07ed_l-5386020-images-thumbs&n=13"
+        ]
+      }
+    };
+    
+    function openNews(newsId) {
+      const news = newsDetails[newsId];
+      if (news) {
+        document.getElementById("modalNewsTitle").innerText = news.title;
+        document.getElementById("modalNewsImage").src = news.image;
+        document.getElementById("modalNewsContent").innerText = news.content + "\n\n" + news.fullText;
+        const galleryElem = document.getElementById("modalGallery");
+        galleryElem.innerHTML = "";
+        if (news.additionalImages && news.additionalImages.length > 0) {
+          news.additionalImages.forEach(imgUrl => {
+            const imgElem = document.createElement("img");
+            imgElem.src = imgUrl;
+            imgElem.alt = news.title;
+            galleryElem.appendChild(imgElem);
+          });
+        }
+        document.getElementById("infoModal").style.display = "flex";
+        
+        // Добавляем секцию рейтинга
+        setTimeout(() => {
+          addRatingSection(newsId);
+          addCommentsSection(newsId);
+        }, 100);
+      }
+    }
+    
+    // Управление состоянием модальных окон
+    document.addEventListener('DOMContentLoaded', function() {
+      // Закрываем все модальные окна при загрузке страницы
+      const modals = document.querySelectorAll('.modal');
+      modals.forEach(modal => {
+        modal.style.display = 'none';
+      });
+
+      // Предотвращаем автоматическое открытие модальных окон
+      const loginLinks = document.querySelectorAll('[data-auth-link="login"]');
+      const registerLinks = document.querySelectorAll('[data-auth-link="register"]');
+
+      loginLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault(); // Предотвращаем действие по умолчанию
+          openModal('loginModal');
+        });
+      });
+
+      registerLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault(); // Предотвращаем действие по умолчанию
+          openModal('registerModal');
+        });
+      });
+
+      // Добавляем localStorage для управления состоянием модальных окон
+      const loginModalState = localStorage.getItem('loginModalState');
+      const registerModalState = localStorage.getItem('registerModalState');
+
+      // Восстанавливаем состояние модальных окон, если необходимо
+      if (loginModalState === 'open') {
+        openModal('loginModal');
+      }
+
+      if (registerModalState === 'open') {
+        openModal('registerModal');
+      }
+
+      // Обновляем состояние модальных окон при закрытии
+      function updateModalState(modalId, state) {
+        localStorage.setItem(`${modalId}State`, state);
+      }
+
+      // Переопределяем функции открытия и закрытия с сохранением состояния
+      const originalOpenModal = window.openModal;
+      window.openModal = function(modalId) {
+        originalOpenModal(modalId);
+        updateModalState(modalId, 'open');
+      };
+
+      const originalCloseModal = window.closeModal;
+      window.closeModal = function(modalId) {
+        originalCloseModal(modalId);
+        updateModalState(modalId, 'closed');
+      };
+    });
+
+    function closeInfoModal() {
+      document.getElementById("infoModal").style.display = "none";
+    }
+    
+    // Улучшенное управление модальными окнами
+    function openModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        modal.style.display = 'flex';
+        // Добавляем анимацию появления
+        modal.querySelector('.modal-content').style.animation = 'modal-slide-up 0.4s ease-out';
+      }
+    }
+
+    function closeModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        // Добавляем анимацию исчезновения
+        const modalContent = modal.querySelector('.modal-content');
+        modalContent.style.animation = 'modal-slide-down 0.3s ease-in forwards';
+        
+        // Скрываем модальное окно после анимации
+        setTimeout(() => {
+          modal.style.display = 'none';
+          modalContent.style.animation = '';
+        }, 300);
+      }
+    }
+
+    // Добавляем анимацию для исчезновения модального окна
+    const styleTag = document.createElement('style');
+    styleTag.textContent = `
+      @keyframes modal-slide-down {
+        from {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        to {
+          opacity: 0;
+          transform: translateY(50px);
+        }
+      }
+    `;
+    document.head.appendChild(styleTag);
+
+    // Валидация формы входа
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const emailInput = this.querySelector('input[type="email"]');
+      const passwordInput = this.querySelector('input[type="password"]');
+      
+      // Простая валидация
+      let isValid = true;
+      
+      // Проверка email
+      if (!emailInput.value.trim() || !isValidEmail(emailInput.value)) {
+        emailInput.classList.add('error');
+        isValid = false;
+      } else {
+        emailInput.classList.remove('error');
+      }
+      
+      // Проверка пароля
+      if (!passwordInput.value.trim() || passwordInput.value.length < 6) {
+        passwordInput.classList.add('error');
+        isValid = false;
+      } else {
+        passwordInput.classList.remove('error');
+      }
+      
+      if (isValid) {
+        const loginResult = userManager.login(emailInput.value, passwordInput.value);
+        
+        if (loginResult.success) {
+          showNotification('Вы успешно вошли в аккаунт!', 'success');
+          closeModal('loginModal');
+          updateAuthUI();
+        } else {
+          showNotification(loginResult.message, 'error');
+        }
+      }
+    });
+
+    // Валидация формы регистрации
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const nameInput = this.querySelector('input[type="text"]');
+      const emailInput = this.querySelector('input[type="email"]');
+      const passwordInput = this.querySelectorAll('input[type="password"]')[0];
+      const confirmPasswordInput = this.querySelectorAll('input[type="password"]')[1];
+      
+      // Простая валидация
+      let isValid = true;
+      
+      // Проверка имени
+      if (!nameInput.value.trim() || nameInput.value.length < 2) {
+        nameInput.classList.add('error');
+        isValid = false;
+      } else {
+        nameInput.classList.remove('error');
+      }
+      
+      // Проверка email
+      if (!emailInput.value.trim() || !isValidEmail(emailInput.value)) {
+        emailInput.classList.add('error');
+        isValid = false;
+      } else {
+        emailInput.classList.remove('error');
+      }
+      
+      // Проверка пароля
+      if (!passwordInput.value.trim() || passwordInput.value.length < 6) {
+        passwordInput.classList.add('error');
+        isValid = false;
+      } else {
+        passwordInput.classList.remove('error');
+      }
+      
+      // Проверка подтверждения пароля
+      if (passwordInput.value !== confirmPasswordInput.value) {
+        confirmPasswordInput.classList.add('error');
+        isValid = false;
+      } else {
+        confirmPasswordInput.classList.remove('error');
+      }
+      
+      if (isValid) {
+        const registrationSuccess = userManager.register(
+          nameInput.value, 
+          emailInput.value, 
+          passwordInput.value
+        );
+        
+        if (registrationSuccess) {
+          showNotification('Регистрация прошла успешно!', 'success');
+          closeModal('registerModal');
+          // Автоматический вход после регистрации
+          userManager.login(emailInput.value, passwordInput.value);
+          updateAuthUI();
+        } else {
+          showNotification('Пользователь с таким email уже существует', 'error');
+        }
+      }
+    });
+
+    // Функция валидации email
+    function isValidEmail(email) {
+      const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      return re.test(String(email).toLowerCase());
+    }
+
+    // Улучшенная функция показа уведомлений
+    function showNotification(message, type = 'success') {
+      const notification = document.getElementById('notification');
+      const notificationMessage = document.getElementById('notificationMessage');
+      
+      notificationMessage.textContent = message;
+      notification.classList.add('show', type);
+      
+      // Удаляем классы после анимации
+      setTimeout(() => {
+        notification.classList.remove('show', type);
+      }, 3000);
+    }
+
+    // Закрытие модальных окон при клике вне области
+    window.addEventListener('click', function(event) {
+      const modals = document.querySelectorAll('.modal');
+      modals.forEach(modal => {
+        if (event.target === modal) {
+          closeModal(modal.id);
+        }
+      });
+    });
+  </script>
+  <script src="auth.js"></script>
+  <script src="background-animation.js"></script>
+  <script src="comments.js"></script>
+  <script src="rating.js"></script>
+  <!-- Мобильная навигация -->
+  <script src="mobile-header-scroll.js"></script>
+  <!-- Скрипт плавных переходов -->
+  <script src="page-transitions.js"></script>
+  <!-- Скрипт анимаций -->
+  <script src="animations.js"></script>
+  <!-- Скрипты в конце body -->
+  <script src="auth.js"></script>
+  <script src="modal-control.js"></script>
+  
+  <!-- Добавляем классы для анимаций -->
+  <div class="content-section animate-on-scroll">
+    <!-- Существующий контент -->
+  </div>
+  
+  <div class="parallax-element">
+    <!-- Элементы с параллакс-эффектом -->
+  </div>
+</body>
+</html>

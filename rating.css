@@ -1,0 +1,53 @@
+/* Стили для рейтинга (звёзды) */
+.rating-section {
+  margin: 24px 0 0 0;
+  padding: 16px 0 8px 0;
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+  background: #fafdff;
+  border-radius: 10px;
+  max-width: 600px;
+}
+.rating-label {
+  font-weight: 600;
+  color: #0097a7;
+  margin-bottom: 8px;
+  font-size: 1.08em;
+}
+.stars {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.star {
+  font-size: 2.1em;
+  color: #b0bec5;
+  cursor: pointer;
+  transition: color 0.2s, transform 0.1s;
+  margin-right: 4px;
+  user-select: none;
+}
+.star.selected {
+  color: #ffc107;
+  text-shadow: 0 2px 8px rgba(255,193,7,0.15);
+  transform: scale(1.15);
+}
+.star:hover,
+.star:focus {
+  color: #ff9800;
+  transform: scale(1.2);
+}
+.rating-stats {
+  color: #666;
+  font-size: 1em;
+  margin-top: 2px;
+}
+@media (max-width: 600px) {
+  .rating-section {
+    padding: 10px 0 6px 0;
+    font-size: 0.98em;
+  }
+  .star {
+    font-size: 1.5em;
+  }
+} 

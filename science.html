@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Наука и Технологии – Наука</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles-mobile.css">
+  <link rel="stylesheet" href="comments.css">
+  <link rel="stylesheet" href="rating.css">
+  <link rel="stylesheet" href="mobile-styles.css">
+  <style>
+    /* Удалены все предыдущие стили */
+    /* Стили для уведомлений */
+    .notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 2000;
+      display: none;
+    }
+
+    .notification-message {
+      background-color: rgba(0, 255, 255, 0.9);
+      color: black;
+      padding: 15px 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      font-weight: bold;
+      text-align: center;
+      max-width: 300px;
+    }
+
+    .notification.success {
+      display: block;
+      animation: slideIn 0.5s ease-out, fadeOut 0.5s ease-in forwards;
+      animation-delay: 0s, 3s;
+    }
+
+    .notification.error {
+      display: block;
+      animation: slideIn 0.5s ease-out, fadeOut 0.5s ease-in forwards;
+      animation-delay: 0s, 3s;
+    }
+
+    .notification.error .notification-message {
+      background-color: rgba(255, 0, 0, 0.9);
+      color: white;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeOut {
+      from {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateX(100%);
+        display: none;
+      }
+    }
+
+    #modalNewsContent {
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo-container">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="site-logo">
+            <defs>
+                <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#00ffff" stop-opacity="1"/>
+                    <stop offset="100%" stop-color="#1a1a3a" stop-opacity="1"/>
+                </linearGradient>
+                <filter id="logoShadow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+                    <feOffset dx="0" dy="0" result="offsetblur"/>
+                    <feFlood flood-color="rgba(0,255,255,0.5)"/>
+                    <feComposite in2="offsetblur" operator="in"/>
+                    <feMerge>
+                        <feMergeNode/>
+                        <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                </filter>
+            </defs>
+            <g filter="url(#logoShadow)">
+                <path d="M20,50 
+                         Q40,30 50,50 
+                         T80,50 
+                         Q60,70 50,50 
+                         T20,50" 
+                      fill="none" 
+                      stroke="url(#logoGradient)" 
+                      stroke-width="6" 
+                      stroke-linecap="round"/>
+                <circle cx="50" cy="50" r="5" fill="#00ffff"/>
+                <path d="M35,35 L65,65 M65,35 L35,65" 
+                      stroke="#ffffff" 
+                      stroke-width="3" 
+                      stroke-linecap="round" 
+                      opacity="0.7"/>
+            </g>
+        </svg>
+        <h1>Наука & Технологии</h1>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html" class="nav-link">Главная</a></li>
+        <li><a href="science.html" class="nav-link active">Наука</a></li>
+        <li><a href="tech.html" class="nav-link">Технологии</a></li>
+        <li><a href="#" onclick="openModal('loginModal')" data-auth-link="login">Вход</a></li>
+        <li><a href="#" onclick="openModal('registerModal')" data-auth-link="register">Регистрация</a></li>
+        <li><span data-user-info style="display:none;"></span></li>
+        <li><a href="#" data-auth-link="logout" style="display:none;">Выйти</a></li>
+      </ul>
+    </nav>
+  </header>
+  <div class="content">
+    <h2>Новости науки</h2>
+    <div class="news-container">
+      <div class="news-card" onclick="openNews('science1')">
+        <img src="https://www.dia-m.ru/upload/medialibrary/51b/chashka_petri_s_kulturoy_bakteriy.jpg" alt="Синтетическая биология">
+        <div class="card-content">
+          <h3>Синтетическая биология</h3>
+          <p>Генетические технологии позволяют создавать новые живые организмы, способные бороться с ранее неизлечимыми болезнями, что открывает эру биотехнологических прорывов.</p>
+        </div>
+      </div>
+      <div class="news-card" onclick="openNews('science2')">
+        <img src="https://avatars.mds.yandex.net/i?id=705be3cd65bff1cd5dfbc9639b1e3d6022f7117b-5858852-images-thumbs&n=13" alt="Физика">
+        <div class="card-content">
+          <h3>Новые открытия в физике</h3>
+          <p>Экспериментальные данные приближают нас к пониманию фундаментальных законов природы.</p>
+        </div>
+      </div>
+      <div class="news-card" onclick="openNews('science3')">
+        <img src="https://avatars.mds.yandex.net/i?id=03b9128edf4f3f480d65be7b6c28df4b49c98dcb-4430404-images-thumbs&n=13" alt="Генетика">
+        <div class="card-content">
+          <h3>Генетические исследования</h3>
+          <p>Новые методы секвенирования генома позволяют разрабатывать персональные методы лечения.</p>
+        </div>
+      </div>
+      <div class="news-card" onclick="openNews('science4')">
+        <img src="https://avatars.mds.yandex.net/i?id=97788393ec1025f2aad243d9484cc6de876f2e6a-4080017-images-thumbs&n=13" alt="Экология">
+        <div class="card-content">
+          <h3>Экологическая наука</h3>
+          <p>Изучение изменения климата и влияние на биоразнообразие поднимают важные вопросы экологии.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="brands">
+    <h2>Инженеры, которым доверяют</h2>
+    <div class="brand-logos">
+      <img src="https://www.smokingcessationandhealth.co.uk/wp-content/uploads/sites/84/2021/02/Johnson_and_Johnson_logo.png" alt="Johnson &amp; Johnson">
+      <img src="https://www.electronjs.org/assets/third-parties/datadog_light.png" alt="Datadog">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Cib-cc-stripe_%28CoreUI_Icons_v1.0.0%29.svg/1200px-Cib-cc-stripe_%28CoreUI_Icons_v1.0.0%29.svg.png" alt="Stripe">
+      <img src="https://orgcentr5.ru/img/brands/7810ccd41bf26faaa2c4e1f20db70a71.png" alt="Samsung">
+    </div>
+  </div>
+  <footer>
+    &copy; 2025 Наука &amp; Технологии. Данный сайт является демонстрационным проектом.
+  </footer>
+  
+  <!-- Модальное окно для новостей -->
+  <div id="infoModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeInfoModal()">&times;</span>
+      <h2 id="modalNewsTitle"></h2>
+      <img id="modalNewsImage" src="" alt="Новость">
+      <p id="modalNewsContent"></p>
+      <div id="modalGallery" class="gallery"></div>
+    </div>
+  </div>
+  
+  <!-- Модальное окно для входа -->
+  <div id="loginModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal('loginModal')">×</span>
+      <h2>Вход</h2>
+      <form id="loginForm">
+        <input type="email" placeholder="Email" required>
+        <input type="password" placeholder="Пароль" required>
+        <button type="submit">Войти</button>
+      </form>
+      <p>Нет аккаунта? <a href="#" onclick="openModal('registerModal')">Зарегистрируйтесь</a></p>
+    </div>
+  </div>
+  
+  <!-- Модальное окно для регистрации -->
+  <div id="registerModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal('registerModal')">×</span>
+      <h2>Регистрация</h2>
+      <form id="registerForm">
+        <input type="text" placeholder="Имя" required>
+        <input type="email" placeholder="Email" required>
+        <input type="password" placeholder="Пароль" required>
+        <input type="password" placeholder="Подтвердите пароль" required>
+        <button type="submit">Зарегистрироваться</button>
+      </form>
+      <p>Уже есть аккаунт? <a href="#" onclick="openModal('loginModal')">Войдите</a></p>
+    </div>
+  </div>
+  
+  <div>
+    <!-- Всплывающие уведомления -->
+    <div id="notification" class="notification">
+      <div id="notificationMessage" class="notification-message"></div>
+    </div>
+  </div>
+
+  <script>
+    // Класс для управления пользовательскими данными
+    class UserManager {
+      constructor() {
+        this.users = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+        this.currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+      }
+      register(name, email, password) {
+        const existingUser = this.users.find(user => user.email === email);
+        if (existingUser) {
+          return { success: false, message: 'Пользователь с таким email уже существует' };
+        }
+        const newUser = {
+          id: Date.now(),
+          name: name,
+          email: email,
+          password: this.hashPassword(password),
+          registeredAt: new Date().toISOString()
+        };
+        this.users.push(newUser);
+        localStorage.setItem('registeredUsers', JSON.stringify(this.users));
+        return { success: true };
+      }
+      login(email, password) {
+        const hashedPassword = this.hashPassword(password);
+        const user = this.users.find(
+          u => u.email === email && u.password === hashedPassword
+        );
+        if (user) {
+          this.currentUser = user;
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          return { success: true };
+        }
+        const existingUser = this.users.find(u => u.email === email);
+        if (existingUser) {
+          return { success: false, message: 'Неверный пароль' };
+        } else {
+          return { success: false, message: 'Пользователь с таким email не найден' };
+        }
+      }
+      logout() {
+        this.currentUser = null;
+        localStorage.removeItem('currentUser');
+      }
+      hashPassword(password) {
+        let hash = 0;
+        for (let i = 0; i < password.length; i++) {
+          const char = password.charCodeAt(i);
+          hash = ((hash << 5) - hash) + char;
+          hash = hash & hash;
+        }
+        return hash.toString();
+      }
+      isLoggedIn() {
+        return !!this.currentUser;
+      }
+      getCurrentUser() {
+        return this.currentUser;
+      }
+      showNotification(message, type = 'success') {
+        // Используем красивые уведомления вместо alert
+        const notification = document.getElementById('notification');
+        const notificationMessage = document.getElementById('notificationMessage');
+        
+        if (notification && notificationMessage) {
+          notificationMessage.textContent = message;
+          notification.className = `notification ${type}`;
+          
+          // Удаляем класс после анимации, чтобы можно было показать следующее уведомление
+          setTimeout(() => {
+            notification.classList.remove(type);
+          }, 3500);
+        } else {
+          // Fallback на alert если элементы уведомлений не найдены
+          alert(message);
+        }
+      }
+    }
+    const userManager = new UserManager();
+
+    // Объект с расширенной информацией для новостей раздела "Наука"
+    const newsDetails = {
+      science1: {
+        title: "Синтетическая биология",
+        image: "https://www.dia-m.ru/upload/medialibrary/51b/chashka_petri_s_kulturoy_bakteriy.jpg",
+        content: "Кратко: генетические технологии открывают новые подходы в медицине.",
+        fullText: `Генетические технологии открывают новые подходы в медицине в разных сферах: диагностике, лечении, профилактике и регенерации. Эти подходы связаны с использованием знаний о геноме человека для изучения причин заболеваний, прогнозирования их развития и разработки индивидуализированных методов профилактики и лечения. 
+
+Диагностика
+Генетические тесты — исследование ДНК, которое выявляет мутации в генах, связанные с предрасположенностью к различным заболеваниям. Например:
+генетический тест на здоровье сердечно-сосудистой системы — выявляет риски инфаркта, инсульта, тромбозов;
+анализ ДНК на онкогены — помогает обнаружить мутации, связанные с наследственными формами рака.
+Скрининговые программы — проводятся на уровне популяции и помогают выявлять носителей опасных мутаций.
+Пренатальная диагностика — изучение генетического материала плода для выявления возможных аномалий.
+ 
+Лечение
+Генная терапия — коррекция или замена неправильно функционирующих генов, ответственных за развитие наследственных заболеваний. Например:
+лечение муковисцидоза — введение нормальной копии гена CFTR, который восстанавливает функцию белка, нарушенную у пациентов с муковисцидозом;
+лечение гемофилии A и B — ген, отвечающий за производство соответствующего фактора свёртываемости крови, вводится в организм пациента для обеспечения нормального функционирования системы крови.
+Таргетная терапия — анализ опухолевых клеток позволяет определить генное изменение, которое делает рак чувствительным к конкретным противоопухолевым препаратам.
+ 
+Профилактика
+Генетическое тестирование потенциальных родителей — позволяет определить наличие мутаций, ассоциированных с наследственными заболеваниями, и оценить риск их передачи будущему потомству.
+Анализ наследственности в семьях с наследственными заболеваниями — помогает выявлять риски для других членов семьи и принимать профилактические меры.
+ 
+Регенерация
+Генетическое модифицирование клеток — введение в клетки генов факторов роста, цитокинов или сигнальных молекул, которые повышают способность этих клеток продуцировать биологически активные вещества и увеличивают их жизнеспособность после трансплантации в повреждённые ткани.
+Исследование генов, отвечающих за регенерацию у животных, — это позволяет попытаться активировать «спящие» механизмы и у человека.`,
+        additionalImages: [
+          "https://avatars.mds.yandex.net/i?id=26882514c3689b1c871481ac67b02eb2_l-5349316-images-thumbs&n=13",
+          "https://assets.entrepreneur.com/content/3x2/2000/20190716070607-shutterstock-660238918.jpeg"
+        ]
+      },
+      science2: {
+        title: "Новые открытия в физике",
+        image: "https://avatars.mds.yandex.net/i?id=705be3cd65bff1cd5dfbc9639b1e3d6022f7117b-5858852-images-thumbs&n=13",
+        content: "Кратко: экспериментальные данные приближают нас к пониманию природы.",
+        fullText: `Экспериментальная физика исследует явления природы в заранее подготовленных условиях. Её задачи — обнаружение ранее неизвестных явлений, подтверждение или опровержение физических теорий, уточнение значений физических констант. Многие достижения в физике были сделаны благодаря экспериментальному обнаружению явлений, не описываемых существующими теориями. 
+Теоретическая физика, в свою очередь, формулирует общие законы природы и объясняет на их основе различные явления, а также предсказывает до сих пор неизвестные явления. Верность любой физической теории проверяется экспериментально: если результаты эксперимента совпадают с предсказаниями теории, она считается адекватной (достаточно точно описывающей данное явление). 
+Некоторые примеры современных исследований в физике:
+Физика элементарных частиц. Исследуется материя на уровне элементарных частиц. Учёные пытаются построить теорию, объединяющую все виды взаимодействий: гравитационное, электромагнитное, слабое и сильное.
+Физика ядра. Достигнут большой прогресс в понимании структуры ядер и достигнут успех в практическом применении ядерных реакций. Одна из важнейших задач в этой области — решение проблемы управляемого термоядерного синтеза.
+Астрофизика. Развитие физики элементарных частиц и атомного ядра позволило приблизиться к пониманию таких сложных проблем, как эволюция Вселенной на ранних стадиях её развития, эволюция звёзд, образование химических элементов.
+Оптика и квантовая электроника. Успехи в этой области связаны с созданием сверхчувствительных приёмных систем и принципиально новых источников света — лазеров или оптических квантовых генераторов.
+Физика плазмы. Важность изучения плазмы связана с тем, что в плазменном состоянии находится подавляющая часть вещества Вселенной.`,
+        additionalImages: [
+          "https://fotografias.lasexta.com/clipping/cmsimages01/2016/11/17/573D7C26-8ED1-401F-AA07-C00A78DB42A7/98.jpg?crop=756,425,x0,y65&width=1900&height=1069&optimize=high&format=webply",
+          "https://dpocpp.ru/pluginfile.php/5306/course/overviewfiles/c36d07625161b8e236ca2a3a328e.jpg"
+        ]
+      },
+      science3: {
+        title: "Генетические исследования",
+        image: "https://avatars.mds.yandex.net/i?id=03b9128edf4f3f480d65be7b6c28df4b49c98dcb-4430404-images-thumbs&n=13",
+        content: "Кратко: новые методы секвенирования открывают возможности персонализированного лечения.",
+        fullText: `новые технологии геномики позволяют обнаруживать редкие мутации и разрабатывать индивидуальные схемы терапии, что улучшает прогнозы для пациентов. 
+Из таких технологий:
+Использование искусственного интеллекта. Он помогает находить закономерности, выявлять скрытые корреляции между мутациями и реакцией на лечение, прогнозировать развитие опухоли и подбирать потенциально эффективные комбинации препаратов. 
+Моделирование взаимодействия опухоли с иммунной системой. Такой подход позволяет прогнозировать, как определённая терапия повлияет на конкретную конфигурацию опухолевой микросреды. Это особенно важно в иммунотерапии, где эффективность колеблется от поразительных ремиссий до полного отсутствия результата. 
+
+Секвенирование генома. Оно позволяет выявлять заболевания на ранней стадии и проводить эффективную терапию. 
+Выявление биомаркеров. Это даёт возможность не только раннее обнаружение заболевания и выбор надлежащего лечения, но и мониторинг результатов лечения, а также определение прогноза развития заболевания. 
+Геномная медицина стремится не просто лечить «рак лёгкого» или «рак молочной железы», а воздействовать на конкретную мутацию или сигнальный путь.`,
+        additionalImages: [
+          "https://habrastorage.org/getpro/geektimes/post_images/228/22b/55e/22822b55e7ba892ad5d48960e8839399.jpg",
+          "https://avatars.mds.yandex.net/i?id=b0a269d095e01d4fcff2740e11176538_l-3703902-images-thumbs&n=13"
+        ]
+      },
+      science4: {
+        title: "Экологическая наука",
+        image: "https://avatars.mds.yandex.net/i?id=97788393ec1025f2aad243d9484cc6de876f2e6a-4080017-images-thumbs&n=13",
+        content: "Кратко: исследования изменения климата поднимают важные экологические вопросы.",
+        fullText: `Исследования изменения климата поднимают важные экологические вопросы, связанные с причинами климатических изменений, их последствиями и путями решения проблемы. Эти вопросы касаются, например:
+Влияние антропогенных факторов на климат. Учёные изучают, как сжигание ископаемых ресурсов (уголь, нефть, природный газ) для производства энергии высвобождает парниковые газы (углекислый газ, метан). 
+
+Последствия изменения климата для экосистем и биоразнообразия. Учёные анализируют, как экстремальные погодные условия (изменение температуры воздуха, количества и частоты осадков) приводят к изменениям экосистем и частичной или полной утрате биологического разнообразия. 
+Необходимость адаптации к изменениям климата и разработки стратегий адаптации к переменам. 
+
+Причины
+Исследования выявляют, что одних природных факторов недостаточно для объяснения изменений климата. К естественным причинам относятся колебания солнечной радиации и крупные вулканические события, но с начала XIX столетия антропогенное влияние вышло на первый план. 
+Последствия
+Учёные анализируют, например:
+Усиление засухи — изменение климата меняет степень доступности воды, делая её более дефицитным ресурсом в растущем числе регионов.
+Повышение уровня Мирового океана — океан поглощает большую часть тепла, образующегося в процессе глобального потепления, и по мере потепления его объём увеличивается, поскольку при нагревании вода расширяется.
+Исчезновение видов — изменение климата создаёт риски для выживания видов на суше и в океане, эти риски возрастают по мере повышения температуры.
+Решения
+Исследования предлагают, например:
+Сокращать выбросы парниковых газов в атмосферу, чтобы избежать необратимых последствий для климата. 
+
+Использовать природно-климатические решения — практики, основанные на защите, восстановлении и устойчивом использовании природных экосистем. Например, лесовосстановление, проекты на водно-болотных угодьях или в зоне вечной мерзлоты. 
+
+Выявлять зоны с наиболее опасными климатическими аномалиями и разрабатывать для них оперативные и долгосрочные меры по адаптации к изменениям климата.`,
+        additionalImages: [
+          "https://static.life.ru/posts/2016/12/948676/15c34ae2d3d4ce908b3feb217b09de42.jpg",
+          "https://static.mk.ru/upload/entities/2025/02/05/09/articles/facebookPicture/4c/60/b3/68/1385bf6d02bce041dd20ac2802d9000c.jpg"
+        ]
+      }
+    };
+    
+    // Блокировка автоматического открытия модального окна
+    document.addEventListener('DOMContentLoaded', function() {
+      const infoModal = document.getElementById('infoModal');
+      if (infoModal) {
+        infoModal.style.display = 'none';
+      }
+    });
+
+    function openNews(newsId) {
+      const news = newsDetails[newsId];
+      if (news) {
+        document.getElementById("modalNewsTitle").innerText = news.title;
+        document.getElementById("modalNewsImage").src = news.image;
+        document.getElementById("modalNewsContent").innerText = news.content + "\n\n" + news.fullText;
+        const galleryElem = document.getElementById("modalGallery");
+        galleryElem.innerHTML = "";
+        if (news.additionalImages && news.additionalImages.length > 0) {
+          news.additionalImages.forEach(imgUrl => {
+            const imgElem = document.createElement("img");
+            imgElem.src = imgUrl;
+            imgElem.alt = news.title;
+            galleryElem.appendChild(imgElem);
+          });
+        }
+        document.getElementById("infoModal").style.display = "flex";
+        
+        // Добавляем секцию рейтинга
+        setTimeout(() => {
+          addRatingSection(newsId);
+          addCommentsSection(newsId);
+        }, 100);
+      }
+    }
+    
+    function closeInfoModal() {
+      document.getElementById("infoModal").style.display = "none";
+    }
+    
+    function openModal(modalId) {
+      document.getElementById(modalId).style.display = 'block';
+    }
+    
+    function closeModal(modalId) {
+      document.getElementById(modalId).style.display = 'none';
+    }
+    
+    // Закрытие модального окна при клике вне его
+    window.onclick = function(event) {
+      if (event.target.classList.contains('modal')) {
+        event.target.style.display = 'none';
+      }
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = this.querySelector('input[type="email"]').value;
+      const password = this.querySelector('input[type="password"]').value;
+      const result = userManager.login(email, password);
+      
+      if (result.success) {
+        showNotification('Вход выполнен успешно', 'success');
+        closeModal('loginModal');
+        updateAuthUI();
+      } else {
+        showNotification(result.message, 'error');
+      }
+    });
+
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = this.querySelector('input[placeholder="Имя"]').value;
+      const email = this.querySelector('input[type="email"]').value;
+      const password = this.querySelector('input[type="password"]').value;
+      const result = userManager.register(name, email, password);
+      
+      if (result.success) {
+        showNotification('Регистрация прошла успешно', 'success');
+        closeModal('registerModal');
+        // Автоматический вход после регистрации
+        userManager.login(email, password);
+        updateAuthUI();
+      } else {
+        showNotification(result.message, 'error');
+      }
+    });
+
+    // === Улучшено для корректного отображения авторизации ===
+    function updateAuthUI() {
+      const navList = document.querySelector('nav ul');
+      const loginLink = navList.querySelector('a[data-auth-link="login"]').parentElement;
+      const registerLink = navList.querySelector('a[data-auth-link="register"]').parentElement;
+      // Удаляем старые элементы приветствия и выхода, если есть
+      const oldUserName = navList.querySelector('#userName');
+      const oldLogout = navList.querySelector('#logoutLink');
+      if (oldUserName) oldUserName.parentElement.remove();
+      if (oldLogout) oldLogout.parentElement.remove();
+      if (userManager.isLoggedIn()) {
+        const user = userManager.getCurrentUser();
+        loginLink.style.display = 'none';
+        registerLink.style.display = 'none';
+        // Добавляем приветствие
+        const userNameElement = document.createElement('li');
+        userNameElement.innerHTML = `<span id="userName">Привет, ${user.name}</span>`;
+        // Добавляем кнопку выхода
+        const logoutLinkElement = document.createElement('li');
+        logoutLinkElement.innerHTML = `<a href="#" id="logoutLink">Выйти</a>`;
+        navList.appendChild(userNameElement);
+        navList.appendChild(logoutLinkElement);
+        // Обработчик выхода
+        document.getElementById('logoutLink').addEventListener('click', function(e) {
+          e.preventDefault();
+          userManager.logout();
+          updateAuthUI();
+          showNotification('Вы вышли из аккаунта');
+        });
+      } else {
+        loginLink.style.display = 'list-item';
+        registerLink.style.display = 'list-item';
+        // Удаляем приветствие и выход, если вдруг остались
+        const oldUserName = navList.querySelector('#userName');
+        const oldLogout = navList.querySelector('#logoutLink');
+        if (oldUserName) oldUserName.parentElement.remove();
+        if (oldLogout) oldLogout.parentElement.remove();
+      }
+    }
+    document.addEventListener('DOMContentLoaded', updateAuthUI);
+    // === Конец улучшения ===
+
+    // Функция для показа уведомлений с возможностью указать тип
+    function showNotification(message, type = 'success') {
+      const notification = document.getElementById('notification');
+      const notificationMessage = document.getElementById('notificationMessage');
+      
+      notificationMessage.textContent = message;
+      notification.className = `notification ${type}`;
+      
+      // Удаляем класс после анимации, чтобы можно было показать следующее уведомление
+      setTimeout(() => {
+        notification.classList.remove(type);
+      }, 3500);
+    }
+  </script>
+  <script src="auth.js"></script>
+  <script src="background-animation.js"></script>
+  <script src="comments.js"></script>
+  <script src="rating.js"></script>
+  <script src="mobile-header-scroll.js"></script>
+  <script src="mobile-scroll.js"></script>
+  <!-- Скрипт плавных переходов -->
+  <script src="page-transitions.js"></script>
+  <!-- Скрипт анимаций -->
+  <script src="animations.js"></script>
+  
+  <!-- Добавляем классы для анимаций -->
+  <div class="content-section animate-on-scroll">
+    <!-- Существующий контент -->
+  </div>
+  
+  <div class="parallax-element">
+    <!-- Элементы с параллакс-эффектом -->
+  </div>
+
+  <!-- Скрипты в конце body -->
+  <script src="auth.js"></script>
+  <script src="modal-control.js"></script>
+</body>
+</html>
